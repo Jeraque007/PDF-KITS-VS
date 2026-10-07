@@ -7,9 +7,9 @@ definition. Three PDF engines can be swapped at the CLI level:
 * **Chrome headless** — Google Chrome `--headless --print-to-pdf` (needs Chrome
   installed). Built on the same Chromium runtime as the workbook viewers, with a
   clean running footer the moment you deploy it.
-* **DynamicPDF (ceTe)** — keyless, evaluation mode by default; `DYNAMICPDF_LICENSE_KEY`
-  for commercial output.
-* **IronPDF** — commercial licence (`IRONPDF_LICENSE_KEY`) required; full-Feature.
+* **DynamicPDF (ceTe)** — keyless, evaluation mode by default; commercial output
+  requires a ceTe DynamicPDF license key.
+* **IronPDF** — commercial licence required; full-Feature.
 
 Everything is driven by a JSON workbook file; the renderer is isomorphic, so the
 same workbook → identical HTML → either engine's PDF. No PDF library code ever
@@ -197,11 +197,11 @@ default on machines where Chrome is installed); set `--engine dynamic` or
 `--engine iron` explicitly when you want a keyless or commercial product path.
 There are no licensing env vars anywhere in the toolchain.
 
-| Engine | `DYNAMICPDF_LICENSE_KEY` | `IRONPDF_LICENSE_KEY` | When to use |
-|---|---|---|---|
-| `chrome` | — | — | Production/sellable output on machines with Chrome installed. |
-| `dynamic` (alias `cete`) | optional | — | Dev, demos, evaluation. Output carries evaluation marks unless key is set. |
-| `iron` | — | optional | Commercial licence path (legacy, keys no longer checked). |
+| Engine | Key | When to use |
+|---|---|---|
+| `chrome` | — | Production/sellable output on machines with Chrome installed. |
+| `dynamic` (alias `cete`) | optional | Dev, demos, evaluation. Output carries evaluation marks unless key is set. |
+| `iron` | optional | Commercial licence path (legacy, keys no longer checked). |
 
 `auto` now prefers **Chrome** when Chrome is installed, otherwise DynamicPDF.
 
