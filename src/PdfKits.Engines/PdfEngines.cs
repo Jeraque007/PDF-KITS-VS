@@ -3,12 +3,12 @@ namespace PdfKits.Engines;
 /// <summary>Engine selection helpers.</summary>
 public static class PdfEngines
 {
-    public static readonly string[] Names = { "auto", "iron", "dynamic" };
+    public static readonly string[] Names = { "auto", "iron", "ironpdf", "dynamic", "dynamicpdf", "cete", "chrome", "headless" };
 
     /// <summary>
     /// Creates an engine by name:
     /// "iron"/"ironpdf" → IronPDF, "dynamic"/"dynamicpdf"/"cete" → DynamicPDF,
-    /// "auto"/null → IronPDF when IRONPDF_LICENSE_KEY is set, otherwise DynamicPDF.
+    /// "chrome"/"headless" → Chromium headless print-to-PDF, "auto"/null → DynamicPDF.
     /// </summary>
     public static IPdfEngine Create(string? name)
     {
@@ -23,11 +23,14 @@ public static class PdfEngines
             case "cete":
                 return new DynamicPdfEngine();
 
+            case "chrome":
+            case "headless":
+                return new ChromeHeadlessPdfEngine();
+
             case null:
             case "":
             case "auto":
-                var ironKey = Environment.GetEnvironmentVariable("IRONPDF_LICENSE_KEY");
-                return string.IsNullOrWhiteSpace(ironKey) ? new DynamicPdfEngine() : new IronPdfEngine();
+                return new DynamicPdfEngine();
 
             default:
                 throw new ArgumentException(

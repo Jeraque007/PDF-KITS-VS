@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using PdfKits.Core;
 using PdfKits.Core.Model;
 using PdfKits.Core.Validation;
 
@@ -20,8 +21,8 @@ public sealed record RenderResult(string Html, IReadOnlyList<ValidationIssue> Wa
 /// </summary>
 public static class WorkbookHtmlRenderer
 {
-    public static RenderResult Render(Workbook workbook, RenderContext? context = null)
-        => new Builder(workbook, context ?? new RenderContext()).Build();
+    public static RenderResult Render(Workbook workbook, RenderContext? context = null, IImageGenerator? imageGenerator = null)
+        => new Builder(workbook, context ?? new RenderContext(), imageGenerator).Build();
 
     private static string N(double v) => v.ToString("0.###", CultureInfo.InvariantCulture);
 
@@ -31,17 +32,21 @@ public static class WorkbookHtmlRenderer
 
         private readonly Workbook _wb;
         private readonly RenderContext _ctx;
+        private readonly IImageGenerator? _imageGenerator;
         private readonly List<ValidationIssue> _warnings = new();
         private int _promptCounter;
 
-        public Builder(Workbook wb, RenderContext ctx)
+        public Builder(Workbook wb, RenderContext ctx, IImageGenerator? imageGenerator)
         {
             _wb = wb;
             _ctx = ctx;
+            _imageGenerator = imageGenerator;
         }
 
         public RenderResult Build()
         {
+            PrepareImageInstructions();
+
             var sb = new StringBuilder(64 * 1024);
             sb.Append("<!DOCTYPE html>\n<html lang=\"").Append(Markup.Plain(_wb.Language)).Append("\">\n<head>\n");
             sb.Append("<meta charset=\"utf-8\">\n");
@@ -59,6 +64,47 @@ public static class WorkbookHtmlRenderer
 
             sb.Append("</body>\n</html>");
             return new RenderResult(sb.ToString(), _warnings);
+        }
+
+        /// <summary>Honours image-generation instructions. A request is explicitly reported when no generator is configured, so nothing is silently dropped.</summary>
+        private void PrepareImageInstructions()
+        {
+            if (_wb.ImageInstructions is null || _wb.ImageInstructions.Count == 0)
+                return;
+
+            if (_imageGenerator is null)
+            {
+                _warnings.Add(new ValidationIssue("imageInstructions",
+                    "Image generation was requested, but no IImageGenerator is configured. Supplied generation requests will not be honoured until a generator is registered.",
+                    IsWarning: true));
+                return;
+            }
+
+            var handled = 0;
+            foreach (var instruction in _wb.ImageInstructions)
+            {
+                if (instruction.Source is not null)
+                {
+                    if (_imageGenerator.Generate(instruction, out var dataUri) && dataUri is not null)
+                    {
+                        handled++;
+                        continue;
+                    }
+                    _warnings.Add(new ValidationIssue("imageInstructions",
+                        $"Supplied asset could not be resolved for an image-generation instruction ({instruction.Source}).",
+                        IsWarning: true));
+                }
+                else if (instruction.Prompt is not null)
+                {
+                    _warnings.Add(new ValidationIssue("imageInstructions",
+                        $"Image generation was requested with prompt '{(instruction.Prompt.Length > 80 ? instruction.Prompt[..80] + "…" : instruction.Prompt)}' but only a file-based generator is configured. Supply an existing asset, register a capable generator, or remove the instruction.",
+                        IsWarning: true));
+                }
+            }
+
+            if (handled > 0)
+                _warnings.Add(new ValidationIssue("imageInstructions",
+                    $"Honoured {handled} supplied asset(s) for image-generation instructions.", IsWarning: false));
         }
 
         private string BuildCover()

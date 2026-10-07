@@ -41,11 +41,14 @@ public static class PageFurniture
         var right = Expand(wb, spec.Right);
 
         // Sensible defaults so a plain { enabled: true } already looks professional.
+        // A blank footer integrates the HOAWS brand, the generation date, and the
+        // running page number, so nothing is left bare on paper.
         if (string.IsNullOrWhiteSpace(left) && string.IsNullOrWhiteSpace(center) && string.IsNullOrWhiteSpace(right))
         {
             if (isFooter)
             {
-                left = Markup.Plain(wb.Title);
+                left = "HOAWS - Human & Online Administrative / Web Solutions";
+                center = "<span class=\"date\"></span>";
                 if (spec.ShowPageNumbers)
                     right = PageNumberSpan() + " / " + TotalPagesSpan();
             }

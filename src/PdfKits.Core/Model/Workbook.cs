@@ -30,6 +30,9 @@ public sealed class Workbook
     [JsonIgnore]
     public string ResolvedCopyright => Copyright
         ?? $"© {DateTime.UtcNow.Year} {Author ?? Publisher ?? "All rights reserved."}";
+    /// <summary>Optional image-generation instructions. Supplied requests are handled by an <see cref="ImageInstruction"/> and are never silently dropped (see README "Image generation" for the caveat).</summary>
+    public IList<ImageInstruction>? ImageInstructions { get; set; }
+
 }
 
 /// <summary>A top-level chapter of the workbook (also the unit listed in the contents page).</summary>

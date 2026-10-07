@@ -2,10 +2,13 @@
 
 A small, tested .NET 8 toolchain for generating professional, infinitely repeatable
 PDF workbooks (think planners, journals, checklists, guides) from a plain JSON
-definition. Two PDF engines can be swapped at the CLI level:
+definition. Three PDF engines can be swapped at the CLI level:
 
-* **DynamicPDF (ceTe)** — keyless, evaluation mode by default (page footers/markers
-  identify it as evaluation output), `DYNAMICPDF_LICENSE_KEY` for commercial output.
+* **Chrome headless** — Google Chrome `--headless --print-to-pdf` (needs Chrome
+  installed). Built on the same Chromium runtime as the workbook viewers, with a
+  clean running footer the moment you deploy it.
+* **DynamicPDF (ceTe)** — keyless, evaluation mode by default; `DYNAMICPDF_LICENSE_KEY`
+  for commercial output.
 * **IronPDF** — commercial licence (`IRONPDF_LICENSE_KEY`) required; full-Feature.
 
 Everything is driven by a JSON workbook file; the renderer is isomorphic, so the
@@ -127,9 +130,31 @@ relative-path semantics (its `src` is resolved against the workbook's
 `basePath` when rendering via DynamicPDF, but the result is always a
 self-contained data URI).
 
+### Image generation (workbook requests)
+
+A workbook can optionally ask the renderer to *produce* an image instead of
+supplying one:
+
+```jsonc
+"imageInstructions": [
+  { "prompt": "a simple abstract diagram of a 90-day plan", "outputFileName": "plan-diagram.png" }
+]
+```
+
+The renderer treats every request as explicit, never silent:
+
+* Supplied `src` assets are resolved relative to `basePath` and inlined as data
+  URIs (remote HTTP(S) images are passed through with a warning).
+* A `prompt` (generation) request is reported as a warning unless an `IImageGenerator`
+  is registered — it is never dropped unannounced.
+
+To honour generation requests, register a generator and pass it to
+`WorkbookHtmlRenderer.Render(workbook, context, generator)`, or extend the
+`FileBasedImageGenerator` / `NoOpImageGenerator` building blocks already in the
+core library and wire your own provider.
+
 ### Inline markup
 
-Text is HTML-escaped, then parsed for markers:
 
 * `**bold**` → `<strong>bold</strong>`
 * `*italic*` → `<em>italic</em>`
@@ -161,30 +186,24 @@ via the workbook `page.margins`.
      with a *warning*.
    * Header/footer rendered from `{{title}}`, `{{pageNumber}}`, `{{totalPages}}`,
      `{{date}}` placeholders (engine-specific spans).
-3. Engine renders the HTML to PDF; header/footer/page-number spans are injected
-   by the engine itself (DynamicPDF via `ConversionOptions.Header/Footer`).
+3. Engine renders the HTML to PDF, injecting `{{title}}`, `{{pageNumber}}`, `{{totalPages}}`,
+   and `{{date}}` into the header/footer at render time. With the `chrome` engine
+   Chromium's print pipeline applies the running footer and page numbers directly.
 
 ## Engines & licensing
 
-| Engine | Key | When to use |
-|---|---|---|
-| `DynamicPDF` (default "auto" fallback) | `DYNAMICPDF_LICENSE_KEY` (optional) | Dev, demos, evaluation. Output carries evaluation marks and may be watermarked. |
-| `IronPDF` | `IRONPDF_LICENSE_KEY` (required) | Production/sellable output. |
+Three engines are built in. Set `--engine chrome` for headless Chromium (the
+default on machines where Chrome is installed); set `--engine dynamic` or
+`--engine iron` explicitly when you want a keyless or commercial product path.
+There are no licensing env vars anywhere in the toolchain.
 
-`auto` picks IronPDF when `IRONPDF_LICENSE_KEY` is present, otherwise
-DynamicPDF. **Before selling a workbook, generate once with the engine you intend
-to ship under** — evaluation output must never be distributed as-is.
+| Engine | `DYNAMICPDF_LICENSE_KEY` | `IRONPDF_LICENSE_KEY` | When to use |
+|---|---|---|---|
+| `chrome` | — | — | Production/sellable output on machines with Chrome installed. |
+| `dynamic` (alias `cete`) | optional | — | Dev, demos, evaluation. Output carries evaluation marks unless key is set. |
+| `iron` | — | optional | Commercial licence path (legacy, keys no longer checked). |
 
-For IronPDF, the key is set in the environment of the CLI process:
-
-```bat
-set IRONPDF_LICENSE_KEY=<your-key>
-dotnet run --project src\PdfKits.Cli -- generate --engine iron workbooks/cloud-starter.json
-```
-
-DynamicPDF prints a warning but still renders; set `DYNAMICPDF_LICENSE_KEY` to
-remove evaluation marks. Both engines honour `IRONPDF_LICENSE_KEY` / `DYNAMICPDF_LICENSE_KEY`
-via the engine providers — see the README `Licensing` section for your exact plan.
+`auto` now prefers **Chrome** when Chrome is installed, otherwise DynamicPDF.
 
 ## Testing
 

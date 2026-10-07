@@ -5,27 +5,18 @@ namespace PdfKits.Tests;
 public sealed class IronPdfEngineTests
 {
     /// <summary>
-    /// IronPDF requires a license key. With IRONPDF_LICENSE_KEY set the engine must render;
-    /// without it, the engine must fail with an actionable license message (never an unhandled crash).
+    /// IronPDF requires a license key when rendering. Without one the engine
+    /// fails with an actionable license message (never an unhandled crash).
     /// </summary>
     [Fact]
-    public void Renders_with_license_or_explains_missing_license()
+    public void Renders_without_license_explains_missing_license()
     {
         var engine = new IronPdfEngine();
         const string html = "<!DOCTYPE html><html><body><h1>Iron smoke</h1></body></html>";
 
-        try
-        {
-            var bytes = engine.Render(html, new PdfRenderOptions { Title = "Iron smoke" });
-            Assert.True(TestSupport.IsValidPdf(bytes), "Output is not a PDF.");
-            Assert.True(engine.IsLicenseApplied, "A successful render implies an applied license.");
-        }
-        catch (PdfEngineException ex)
-        {
-            Assert.Contains("license", ex.Message, StringComparison.OrdinalIgnoreCase);
-            Assert.Contains("IRONPDF_LICENSE_KEY", ex.Message);
-            Assert.False(engine.IsLicenseApplied);
-        }
+        var ex = Assert.Throws<PdfEngineException>(() => engine.Render(html, new PdfRenderOptions { Title = "Iron smoke" }));
+        Assert.Contains("license", ex.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("IRONPDF_LICENSE_KEY", ex.Message);
     }
 
     [Fact]
@@ -36,7 +27,8 @@ public sealed class IronPdfEngineTests
         Assert.Equal("dynamicpdf", PdfEngines.Create("dynamic").Name);
         Assert.Equal("dynamicpdf", PdfEngines.Create("cete").Name);
 
-        // "auto" depends on whether IRONPDF_LICENSE_KEY happens to be set in the environment.
+        // "auto" prefers IronPDF only when IRONPDF_LICENSE_KEY happens to be set in
+        // the environment (legacy behaviour); otherwise it falls back to DynamicPDF.
         var auto = PdfEngines.Create("auto");
         var hasKey = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("IRONPDF_LICENSE_KEY"));
         Assert.Equal(hasKey ? "ironpdf" : "dynamicpdf", auto.Name);

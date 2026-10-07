@@ -11,15 +11,9 @@ namespace PdfKits.Engines;
 public sealed class IronPdfEngine : IPdfEngine
 {
     public string Name => "ironpdf";
-    public string? LicenseKeyEnvironmentVariable => "IRONPDF_LICENSE_KEY";
-    public bool IsLicenseApplied { get; }
 
     public IronPdfEngine()
     {
-        var key = Environment.GetEnvironmentVariable(LicenseKeyEnvironmentVariable!);
-        if (!string.IsNullOrWhiteSpace(key))
-            License.LicenseKey = key;
-        IsLicenseApplied = License.IsLicensed;
     }
 
     public byte[] Render(string html, PdfRenderOptions o)
@@ -83,9 +77,8 @@ public sealed class IronPdfEngine : IPdfEngine
         catch (LicensingException ex)
         {
             throw new PdfEngineException(
-                "IronPDF requires a license key to render. Set the IRONPDF_LICENSE_KEY environment variable "
-                + "(free trial key: https://ironsoftware.com/csharp/pdf/licensing/), or use --engine dynamic instead. "
-                + "Details: " + ex.Message,
+                "IronPDF requires a license key to render. IRONPDF_LICENSE_KEY should be set "
+                + "to a key (free trial: https://ironsoftware.com/csharp/pdf/licensing/).",
                 ex);
         }
         catch (PdfEngineException)

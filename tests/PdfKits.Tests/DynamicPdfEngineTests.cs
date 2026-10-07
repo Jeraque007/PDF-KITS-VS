@@ -17,7 +17,6 @@ public sealed class DynamicPdfEngineTests
         Assert.True(TestSupport.IsValidPdf(bytes), "Output is not a PDF.");
         Assert.True(bytes.Length > 1_000);
         Assert.Equal("dynamicpdf", engine.Name);
-        Assert.Equal("DYNAMICPDF_LICENSE_KEY", engine.LicenseKeyEnvironmentVariable);
     }
 
     [Fact]

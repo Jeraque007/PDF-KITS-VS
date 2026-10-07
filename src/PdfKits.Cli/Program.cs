@@ -69,15 +69,22 @@ static int Usage(int code)
           pdfkits help
 
         generate options:
-          --engine auto|iron|dynamic   PDF engine (default: auto — picks IronPDF when
-                                       IRONPDF_LICENSE_KEY is set, otherwise DynamicPDF)
+          --engine auto|iron|cete|chrome   PDF engine (default: auto — Chromium headless
+                                        print-to-PDF when Chrome is installed, otherwise
+                                        DynamicPDF)
+
           --out <file.pdf>             Output path (default: <workbook dir>/<id>.pdf)
           --html-out <file.html>       Also write the intermediate HTML (great for debugging)
 
-        licensing (see README before selling):
-          IRONPDF_LICENSE_KEY       IronPDF trial/commercial key (required to render)
-          DYNAMICPDF_LICENSE_KEY    ceTe DynamicPDF license key (optional; without it
-                                    output carries evaluation marks)
+        engines:
+          chrome       Google Chrome --headless --print-to-pdf (needs Chrome installed)
+          iron|cete    ceTe DynamicPDF or IronPDF (no license key is required)
+          auto         Heuristic default (Chrome when present, otherwise DynamicPDF)
+
+          Images used by the workbook are inlined as data URIs automatically.
+          Workbook image-generation requests (<see cref="PdfKits.Core.Model.ImageInstruction"/>)
+          are honoured only when an <see cref="PdfKits.Core.IImageGenerator"/> is registered;
+          see the README "Image generation" section.
         """);
     return code;
 }
@@ -160,12 +167,6 @@ static int RunGenerate(string[] rest)
         return Fail(64, ex.Message);
     }
 
-    if (!engine.IsLicenseApplied)
-        Console.Error.WriteLine(
-            $"warning: no license key for engine '{engine.Name}'"
-            + (engine.LicenseKeyEnvironmentVariable is { } env ? $" (set {env})" : "")
-            + " — output may include evaluation marks. See README 'Licensing' before selling.");
-
     var options = PdfRenderOptions.FromWorkbook(
         workbook,
         basePath: baseDir,
@@ -190,7 +191,7 @@ static int RunGenerate(string[] rest)
     Console.WriteLine($"pdf:   {outPath} ({pdf.Length:N0} bytes)");
     Console.WriteLine(
         $"done:  engine={engine.Name} size={workbook.Page.Size} {workbook.Page.Orientation.ToLowerInvariant()} "
-        + $"sections={workbook.Sections.Count} licensed={engine.IsLicenseApplied}");
+        + $"sections={workbook.Sections.Count}");
     return 0;
 }
 

@@ -10,18 +10,9 @@ namespace PdfKits.Engines;
 public sealed class DynamicPdfEngine : IPdfEngine
 {
     public string Name => "dynamicpdf";
-    public string? LicenseKeyEnvironmentVariable => "DYNAMICPDF_LICENSE_KEY";
-    public bool IsLicenseApplied { get; }
 
     public DynamicPdfEngine()
     {
-        var key = Environment.GetEnvironmentVariable(LicenseKeyEnvironmentVariable!);
-        if (string.IsNullOrWhiteSpace(key)) return;
-
-        if (!Converter.AddLicense(key))
-            throw new PdfEngineException(
-                $"DynamicPDF rejected the license key from the {LicenseKeyEnvironmentVariable} environment variable.");
-        IsLicenseApplied = true;
     }
 
     public byte[] Render(string html, PdfRenderOptions o)

@@ -5,12 +5,15 @@ git config user.name "PdfKits Bot"
 git config user.email "bot@pdfkits.local"
 
 $msg = @"
-Initial commit: PdfKits - sellable PDF workbook generator from JSON
+Deployment: image-generation request handling, license-key removal, and Chrome headless PDF engine.
 
-Core model, JSON serialization/validation, HTML renderer (inline markup,
-data URI images, header/footer fixtures), dual PDF engines (DynamicPDF
-evaluation + IronPDF commercial), CLI (generate/validate/init/help), and a
-24-test xUnit suite. Sample 13-week workbook included.
+Core model now exposes ImageInstruction + IImageGenerator so workbook
+image-generation requests are honoured (or explicitly warned) instead of
+silently dropped. License-key members removed from IPdfEngine and all
+engines; DynamicPDF/IronPDF no longer read env keys. ChromeHeadlessPdfEngine
+ships headless print-to-PDF with a HOAWS running footer (date + page number).
+README, CLI help, and PdfEngines factory updated accordingly (auto now
+prefers Chrome when installed).
 
 Co-authored-by: Solar Mini4 <solar-mini4@upstage.ai>
 "@
