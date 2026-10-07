@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# PdfKits .gitignore
+# ---------------------------------------------------------------------------
+
+# Build output
+**/bin
+**/obj
+.vs/
+.idea/
+
+# Tools scratch project (third-party probing)
+tools/ApiProbe/bin/
+tools/ApiProbe/obj/
+
+# Generated / runtime content
+output/
+*.log
+
+# User / IDE
+*.user
+*.suo
+.vscode/
+
+# OS
+Thumbs.db

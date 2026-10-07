@@ -1,0 +1,175 @@
+{
+  "id": "clarity-planner",
+  "title": "The Clarity Planner",
+  "subtitle": "A 90-Day Guided Planning Workbook",
+  "author": "Alex Mercer",
+  "publisher": "Northline Press",
+  "version": "1.0",
+  "language": "en",
+  "copyright": "© 2026 Alex Mercer / Northline Press. All rights reserved.",
+  "theme": {
+    "primaryColor": "#1F4E79",
+    "secondaryColor": "#D9962C",
+    "accentColor": "#2E7D6F",
+    "inkColor": "#222A33",
+    "mutedColor": "#6B7280",
+    "lineColor": "#C7D2DC",
+    "surfaceColor": "#F4F7FA",
+    "headingFont": "Georgia, 'Times New Roman', serif",
+    "bodyFont": "'Segoe UI', -apple-system, 'Helvetica Neue', Arial, sans-serif",
+    "baseFontSizePt": 10.5,
+    "lineHeight": 1.5
+  },
+  "page": {
+    "size": "Letter",
+    "orientation": "Portrait",
+    "margins": { "top": 0.75, "right": 0.75, "bottom": 0.75, "left": 0.75 },
+    "footer": {
+      "enabled": true,
+      "showPageNumbers": true,
+      "dividerLine": true,
+      "left": "{{title}}",
+      "right": "{{date}}"
+    }
+  },
+  "cover": {
+    "enabled": true,
+    "kicker": "90-Day Guided Workbook",
+    "tagline": "Plan with intention. Act with focus. Finish with proof.",
+    "edition": "First Edition"
+  },
+  "frontMatter": {
+    "copyrightPage": true,
+    "tableOfContents": true,
+    "tocTitle": "Contents",
+    "disclaimer": "This workbook is provided for general informational and educational purposes only. It is not a substitute for professional medical, financial, legal, or psychological advice. No results are guaranteed; the author and publisher accept no liability for decisions made using this material."
+  },
+  "sections": [
+    {
+      "id": "start-here",
+      "title": "Start Here",
+      "subtitle": "How to get the most from this workbook",
+      "blocks": [
+        { "type": "paragraph", "style": "lead", "text": "You hold ninety days of momentum in your hands. This workbook is not meant to be read once — it is meant to be *written in*, week after week, until the plan in your head becomes a record on the page." },
+        { "type": "callout", "style": "tip", "title": "Before you begin", "text": "Set aside 30 minutes for the first session and 15 minutes every Sunday after that. Consistency beats intensity." },
+        { "type": "heading", "level": 2, "text": "The rhythm" },
+        { "type": "list", "ordered": true, "items": [
+          "Complete the Vision pages once — this is your compass.",
+          "Set three 90-day goals using the goal worksheet.",
+          "Plan one week at a time in the weekly pages.",
+          "Close each month with the reflection prompts."
+        ]},
+        { "type": "heading", "level": 3, "text": "What you need" },
+        { "type": "checklist", "title": "Your kit", "columns": 2, "items": [
+          "A pen you enjoy writing with",
+          "A calendar you check daily",
+          "30 quiet minutes this week",
+          "One honest conversation with yourself"
+        ]},
+        { "type": "quote", "text": "A goal without a plan is just a wish.", "attribution": "Antoine de Saint-Exupéry" },
+        { "type": "paragraph", "style": "small", "text": "Print single-sided on US Letter or A4. Every page is designed to be written on — the lines, boxes and tables are yours." }
+      ]
+    },
+    {
+      "id": "vision",
+      "title": "Vision & Direction",
+      "subtitle": "Know where you are going before you plan the route",
+      "blocks": [
+        { "type": "paragraph", "text": "Answer these prompts quickly and honestly. First instincts are usually the truest. Write as much as you need — extra pages are at the back of each section." },
+        { "type": "prompt", "numbered": true, "text": "If the next 90 days went perfectly, what would be different?", "hint": "Describe a normal day, ninety days from now.", "lines": 6 },
+        { "type": "prompt", "numbered": true, "text": "What are you saying no to in order to say yes to this?", "lines": 4 },
+        { "type": "prompt", "numbered": true, "text": "Which three words describe how you want to work this quarter?", "lines": 4 },
+        { "type": "pagebreak" },
+        { "type": "heading", "level": 2, "text": "Your compass statement" },
+        { "type": "paragraph", "text": "Combine your answers into one short statement you can pin above your desk." },
+        { "type": "lines", "label": "Compass statement", "count": 8, "gapPt": 26 },
+        { "type": "callout", "style": "note", "title": "Keep it visible", "text": "Photograph this page and set it as your phone wallpaper for the next 90 days." }
+      ]
+    },
+    {
+      "id": "goals",
+      "title": "Your 90-Day Plan",
+      "subtitle": "Three goals, fully broken down",
+      "blocks": [
+        { "type": "paragraph", "text": "Pick no more than three goals. For each one, name the milestone that proves progress and the deadline that creates urgency." },
+        { "type": "table", "style": "grid", "headers": [ "90-day goal", "First milestone", "Second milestone", "Deadline", "Done" ], "rowHeightPt": 46, "rows": [
+          [ "", "", "", "", "" ],
+          [ "", "", "", "", "" ],
+          [ "", "", "", "", "" ]
+        ]},
+        { "type": "callout", "style": "warning", "title": "Guard your focus", "text": "Three goals is a ceiling, not a target. If everything is a priority, nothing is." },
+        { "type": "heading", "level": 2, "text": "Milestone review dates" },
+        { "type": "table", "style": "ruled", "headers": [ "Review", "Date", "What I expect to see", "Verdict" ], "rowHeightPt": 34, "rows": [
+          [ "30-day check", "", "", "" ],
+          [ "60-day check", "", "", "" ],
+          [ "90-day close", "", "", "" ]
+        ]},
+        { "type": "checklist", "title": "Goal hygiene", "columns": 1, "items": [
+          "Each goal is written in one sentence.",
+          "Each goal has a visible progress measure.",
+          "Each goal has a date in the calendar, not just on paper."
+        ]}
+      ]
+    },
+    {
+      "id": "weekly-pages",
+      "title": "Weekly Planning Pages",
+      "subtitle": "Thirteen weeks, one page at a time",
+      "blocks": [
+        { "type": "paragraph", "text": "One page per week. Fill it in on Sunday evening or Monday morning — whichever moment you actually show up for." },
+        { "type": "repeat", "times": 13, "label": "Week {n} of {total}", "blocks": [
+          { "type": "table", "style": "grid", "headers": [ "This week's focus", "Must happen", "Would be great" ], "rowHeightPt": 54, "rows": [ [ "", "", "" ], [ "", "", "" ] ] },
+          { "type": "prompt", "text": "What would make this week a win?", "lines": 3 },
+          { "type": "lines", "label": "Notes & parking lot", "count": 6 }
+        ]}
+      ]
+    },
+    {
+      "id": "habit-tracker",
+      "title": "Habit Tracker",
+      "subtitle": "One month of small promises",
+      "blocks": [
+        { "type": "paragraph", "text": "List the habits you are building this month. Tick each day you keep the promise — the streak is the reward." },
+        { "type": "table", "style": "grid", "headers": [ "Habit", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ], "rowHeightPt": 28, "rows": [
+          [ "", "", "", "", "", "", "", "" ],
+          [ "", "", "", "", "", "", "", "" ],
+          [ "", "", "", "", "", "", "", "" ],
+          [ "", "", "", "", "", "", "", "" ],
+          [ "", "", "", "", "", "", "", "" ],
+          [ "", "", "", "", "", "", "", "" ]
+        ]},
+        { "type": "callout", "style": "tip", "title": "Never miss twice", "text": "Missing one day is an accident; missing twice is the start of a new habit. Keep the streak alive." },
+        { "type": "lines", "label": "What got in the way", "count": 6 }
+      ]
+    },
+    {
+      "id": "reflection",
+      "title": "Reflection & Journal",
+      "subtitle": "Monthly reviews and open pages",
+      "blocks": [
+        { "type": "heading", "level": 2, "text": "Monthly review" },
+        { "type": "prompt", "numbered": true, "text": "What moved forward this month — and what evidence proves it?", "lines": 5 },
+        { "type": "prompt", "numbered": true, "text": "What drained more energy than it returned?", "lines": 5 },
+        { "type": "prompt", "numbered": true, "text": "What will you do differently next month?", "lines": 5 },
+        { "type": "quote", "text": "We do not rise to the level of our goals; we fall to the level of our systems.", "attribution": "James Clear" },
+        { "type": "pagebreak" },
+        { "type": "heading", "level": 2, "text": "Open journal pages" },
+        { "type": "repeat", "times": 6, "label": "Journal entry {n} of {total}", "blocks": [
+          { "type": "prompt", "text": "Date & mood", "lines": 0 },
+          { "type": "lines", "count": 14, "gapPt": 24 }
+        ]}
+      ]
+    },
+    {
+      "id": "closing",
+      "title": "Closing Page",
+      "subtitle": "Before you turn the last sheet",
+      "blocks": [
+        { "type": "prompt", "text": "What did you learn about yourself this quarter?", "lines": 8 },
+        { "type": "prompt", "text": "Write a note to yourself to open in 90 days.", "hint": "Be specific. Future-you will thank present-you.", "lines": 8 },
+        { "type": "spacer", "heightPt": 10 },
+        { "type": "paragraph", "style": "small", "align": "center", "text": "End of workbook — the next one starts on page one. © 2026 Alex Mercer / Northline Press." }
+      ]
+    }
+  ]
+}
